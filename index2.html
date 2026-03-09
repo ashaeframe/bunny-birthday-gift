@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Happy Birthday Johnsy Mary</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Poppins", Arial, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #ffd6e8, #ff9eb5, #fff0f5);
+      color: white;
+      overflow-x: hidden;
+    }
+
+    .hearts {
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .heart {
+      position: absolute;
+      bottom: -40px;
+      color: rgba(255, 255, 255, 0.85);
+      font-size: 18px;
+      animation: floatUp linear infinite;
+      opacity: 0;
+    }
+
+    @keyframes floatUp {
+      0% {
+        transform: translateY(0) scale(0.8);
+        opacity: 0;
+      }
+      10% {
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-120vh) scale(1.4) rotate(20deg);
+        opacity: 0;
+      }
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 950px;
+      background: rgba(255, 255, 255, 0.16);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      border-radius: 28px;
+      box-shadow: 0 14px 40px rgba(0, 0, 0, 0.18);
+      padding: 30px;
+      text-align: center;
+    }
+
+    .screen {
+      display: none;
+      animation: fadeIn 0.7s ease;
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(18px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 12px;
+      text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    h2 {
+      font-size: 2rem;
+      margin-bottom: 16px;
+    }
+
+    p {
+      font-size: 1.08rem;
+      line-height: 1.7;
+      margin-bottom: 18px;
+    }
+
+    .highlight {
+      color: #fff3a6;
+      font-weight: 700;
+    }
+
+    .btn {
+      border: none;
+      padding: 14px 28px;
+      border-radius: 999px;
+      font-size: 1rem;
+      cursor: pointer;
+      margin: 8px;
+      background: #ff4f81;
+      color: white;
+      transition: 0.25s ease;
+      box-shadow: 0 8px 22px rgba(255, 79, 129, 0.28);
+    }
+
+    .btn:hover {
+      transform: translateY(-2px) scale(1.04);
+      background: #ff2f68;
+    }
+
+    .btn.secondary {
+      background: rgba(255,255,255,0.2);
+      border: 1px solid rgba(255,255,255,0.25);
+      box-shadow: none;
+    }
+
+    .hero-photo {
+      width: 220px;
+      height: 220px;
+      margin: 22px auto;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 5px solid rgba(255,255,255,0.75);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.16);
+      background: rgba(255,255,255,0.25);
+    }
+
+    .hero-photo img,
+    .gallery img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      margin-top: 20px;
+    }
+
+    .img-box {
+      height: 220px;
+      overflow: hidden;
+      border-radius: 18px;
+      border: 2px solid rgba(255,255,255,0.24);
+      box-shadow: 0 8px 18px rgba(0,0,0,0.1);
+    }
+
+    .message-box,
+    .letter,
+    .quiz-box,
+    .result-box {
+      background: rgba(255,255,255,0.14);
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 18px;
+      padding: 20px;
+      margin-top: 18px;
+    }
+
+    .letter {
+      text-align: left;
+      line-height: 1.85;
+      max-width: 760px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .question-count {
+      color: #fff3a6;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .quiz-box {
+      max-width: 760px;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: left;
+    }
+
+    .options {
+      display: grid;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .option {
+      background: rgba(255,255,255,0.14);
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 14px;
+      padding: 14px;
+      cursor: pointer;
+      transition: 0.22s ease;
+    }
+
+    .option:hover {
+      background: rgba(255,255,255,0.24);
+      transform: translateX(4px);
+    }
+
+    .score {
+      font-size: 2rem;
+      color: #fff3a6;
+      font-weight: 800;
+      margin: 12px 0;
+    }
+
+    .small-note {
+      font-size: 0.95rem;
+      opacity: 0.95;
+    }
+
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 2.2rem;
+      }
+
+      h2 {
+        font-size: 1.6rem;
+      }
+
+      .gallery {
+        grid-template-columns: 1fr;
+      }
+
+      .img-box {
+        height: 200px;
+      }
+
+      .card {
+        padding: 22px 16px;
+      }
+
+      .hero-photo {
+        width: 190px;
+        height: 190px;
+      }
+    }
+    .flip-card{
+  background:transparent;
+  width:100%;
+  height:220px;
+  perspective:1000px;
+  cursor:pointer;
+}
+
+.flip-inner{
+  position:relative;
+  width:100%;
+  height:100%;
+  text-align:center;
+  transition:transform 0.8s;
+  transform-style:preserve-3d;
+}
+
+.flip-card.flipped .flip-inner{
+  transform:rotateY(180deg);
+}
+
+.flip-front,
+.flip-back{
+  position:absolute;
+  width:100%;
+  height:100%;
+  backface-visibility:hidden;
+  border-radius:18px;
+  overflow:hidden;
+}
+
+.flip-front img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.flip-back{
+  background:linear-gradient(135deg,#ff4f81,#ff7aa3);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:20px;
+  transform:rotateY(180deg);
+  font-size:18px;
+  color:white;
+}
+
+.intro-screen {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(135deg, #ff8fb1, #ff4f81, #ffc1d6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  animation: introFadeBg 4s ease-in-out infinite alternate;
+}
+
+@keyframes introFadeBg {
+  from {
+    background: linear-gradient(135deg, #ff8fb1, #ff4f81, #ffc1d6);
+  }
+  to {
+    background: linear-gradient(135deg, #ffb3c7, #ff6f9d, #ffd9e8);
+  }
+}
+
+.intro-content {
+  text-align: center;
+  color: white;
+  padding: 30px;
+  animation: zoomIn 1.2s ease;
+}
+
+@keyframes zoomIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.intro-title {
+  font-size: 3rem;
+  margin-bottom: 16px;
+  text-shadow: 0 4px 18px rgba(0,0,0,0.2);
+}
+
+.intro-text {
+  font-size: 1.4rem;
+  margin: 10px 0;
+  opacity: 0;
+  animation: fadeText 1s ease forwards;
+}
+
+.intro-text:nth-child(2) {
+  animation-delay: 0.7s;
+}
+
+.intro-text:nth-child(3) {
+  animation-delay: 1.4s;
+}
+
+.intro-text span {
+  color: #fff3a6;
+  font-weight: 700;
+}
+
+@keyframes fadeText {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.enter-btn {
+  margin-top: 24px;
+  padding: 14px 30px;
+  border: none;
+  border-radius: 999px;
+  background: white;
+  color: #ff2f68;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.3s ease;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  animation: fadeText 1s ease forwards;
+  animation-delay: 2s;
+  opacity: 0;
+}
+
+.enter-btn:hover {
+  transform: scale(1.06);
+  background: #fff3f7;
+}
+
+.hide-intro {
+  animation: fadeOutIntro 0.8s ease forwards;
+}
+
+@keyframes fadeOutIntro {
+  from {
+    opacity: 1;
+    visibility: visible;
+  }
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+@media (max-width: 768px) {
+  .intro-title {
+    font-size: 2.2rem;
+  }
+
+  .intro-text {
+    font-size: 1.1rem;
+  }
+}
+
+.secret-letter {
+  margin-top: 24px;
+  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  border-radius: 20px;
+  padding: 22px;
+  max-width: 760px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: left;
+  line-height: 1.8;
+  animation: fadeLetter 0.8s ease;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+}
+
+.secret-letter h3 {
+  text-align: center;
+  margin-bottom: 14px;
+  color: #fff3a6;
+}
+
+.hidden {
+  display: none;
+}
+
+@keyframes fadeLetter {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+  </style>
+</head>
+<body>
+  <div id="introScreen" class="intro-screen">
+  <div class="intro-content">
+    <h1 class="intro-title">A Special Surprise</h1>
+    <p class="intro-text">For <span>Johnsy Mary</span></p>
+    <p class="intro-text">From <span>Asha Eframe</span> ❤️</p>
+    <button class="enter-btn" onclick="enterWebsite()">Tap to Enter</button>
+  </div>
+</div>
+  <div class="hearts" id="hearts"></div>
+
+  <div class="container">
+    <div class="card">
+
+      <section class="screen active" id="screen1">
+        <h1>Happy Birthday Johnsy Mary ❤️</h1>
+        <p>
+          This little surprise is made with love by
+          <span class="highlight">Asha Eframe</span>
+          for the most special girl, <span class="highlight">Johnsy Mary</span>.
+        </p>
+
+        <div class="hero-photo">
+          <img src="photo1.jpeg" alt="Johnsy Mary">
+        </div>
+
+        <p>
+          May your birthday be filled with happiness, laughter, peace, and all the love you deserve.
+        </p>
+
+        <button class="btn" onclick="nextScreen(2)">Open Your Surprise</button>
+        <button class="btn secondary" onclick="toggleMusic()">Play / Pause Music</button>
+        <p class="small-note">Replace the photo and song file with your real ones.</p>
+      </section>
+
+      <section class="screen" id="screen2">
+        <h2>Why You Are So Special ✨</h2>
+        <div class="message-box">
+          <p>
+            Johnsy Mary, you are one of the sweetest and most beautiful parts of my life.
+            Your smile brings happiness, your presence brings peace, and your heart makes everything feel special.
+          </p>
+          <p>
+            Every moment with you feels precious, and today I just want to celebrate
+            <span class="highlight">you</span>.
+          </p>
+        </div>
+        <button class="btn" onclick="nextScreen(3)">See Memories</button>
+      </section>
+
+      <section class="screen" id="screen3">
+        <h2>Beautiful Memories 📸</h2>
+        <p>Replace these sample images with your real photos together.</p>
+
+        <div class="gallery">
+
+  <div class="flip-card" onclick="flipCard(this)">
+    <div class="flip-inner">
+      <div class="flip-front">
+        <img src="photo2.jpeg">
+      </div>
+      <div class="flip-back">
+        <p>Johnsy Mary, your smile makes my world brighter ❤️</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="flip-card" onclick="flipCard(this)">
+    <div class="flip-inner">
+      <div class="flip-front">
+        <img src="photo3.jpeg">
+      </div>
+      <div class="flip-back">
+        <p>You are one of the most special people in my life 💕</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="flip-card" onclick="flipCard(this)">
+    <div class="flip-inner">
+      <div class="flip-front">
+        <img src="photo4.jpeg">
+      </div>
+      <div class="flip-back">
+        <p>Every moment with you becomes a beautiful memory ✨</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="flip-card" onclick="flipCard(this)">
+    <div class="flip-inner">
+      <div class="flip-front">
+        <img src="photo5.jpeg">
+      </div>
+      <div class="flip-back">
+        <p>Happy Birthday Johnsy Mary ❤️ – From Asha Eframe</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+        <button class="btn" onclick="nextScreen(4)">Read My Letter</button>
+      </section>
+      <div id="secretLetter" class="secret-letter hidden">
+  <h3>Secret Letter for Johnsy Mary 💌</h3>
+  <p>
+    My dear Johnsy Mary,
+  </p>
+  <p>
+    If you are reading this, it means you found all the hidden memories.
+    Just like these cards, every moment with you reveals something beautiful.
+  </p>
+  <p>
+    You are one of the sweetest parts of my life, and this little surprise
+    was made only to make you smile on your special day.
+  </p>
+  <p>
+    Happy Birthday, Johnsy Mary ❤️<br>
+    Forever wishing you happiness,<br>
+    <strong>Asha Eframe</strong>
+  </p>
+</div>
+
+      <section class="screen" id="screen4">
+        <h2>A Letter for Johnsy Mary 💌</h2>
+        <div class="letter">
+          <p>My dear Johnsy Mary,</p>
+
+          <p>
+            Happy Birthday to the most wonderful girl. On this special day, I want you to know how much you mean to me.
+            You bring warmth, joy, and sweetness into my life in a way that words can never fully explain.
+          </p>
+
+          <p>
+            You are beautiful not only in your smile, but also in your heart, your kindness, and the way you make life feel brighter.
+            I am truly grateful for every memory, every conversation, and every little moment connected with you.
+          </p>
+
+          <p>
+            Today, I wish you endless happiness, success, peace, and love.
+            May your life always be filled with beautiful moments and genuine smiles.
+          </p>
+
+          <p>
+            Once again, Happy Birthday, Johnsy Mary. You are very special to me.
+          </p>
+
+          <p>
+            With love,<br>
+            <strong>Asha Eframe ❤️</strong>
+          </p>
+        </div>
+        <button class="btn" onclick="startQuiz()">Start Birthday Quiz</button>
+      </section>
+
+      <section class="screen" id="screen5">
+        <h2>Birthday Quiz 🎀</h2>
+        <div class="quiz-box">
+          <p class="question-count" id="questionCount"></p>
+          <h3 id="questionText"></h3>
+          <div class="options" id="optionsContainer"></div>
+        </div>
+      </section>
+
+      <section class="screen" id="screen6">
+        <h2>Your Result 💖</h2>
+        <div class="result-box">
+          <p>You completed the birthday quiz, Johnsy Mary.</p>
+          <div class="score" id="finalScore">0 / 50</div>
+          <p id="resultMessage"></p>
+        </div>
+        <button class="btn" onclick="nextScreen(7)">See Final Surprise</button>
+      </section>
+
+      <section class="screen" id="screen7">
+        <h2>Final Surprise ❤️</h2>
+        <div class="message-box">
+          <p>
+            Johnsy Mary, no score, no words, and no gift can fully express how special you are.
+          </p>
+          <p>
+            I just want to see you smiling today and always.
+          </p>
+          <p>
+            <span class="highlight">Happy Birthday, Johnsy Mary</span><br>
+            With love from <span class="highlight">Asha Eframe</span>.
+          </p>
+        </div>
+
+        <audio id="bgMusic" controls loop>
+          <source src="background.mpeg" type="audio/mpeg">
+          Your browser does not support the audio element.
+        </audio>
+
+        <p class="small-note" style="margin-top: 12px;">
+          Change <strong>your-song.mp3</strong> to your real song file name.
+        </p>
+
+        <button class="btn" onclick="nextScreen(1)">Start Again</button>
+      </section>
+
+    </div>
+  </div>
+
+  <script>
+    function nextScreen(number) {
+      document.querySelectorAll(".screen").forEach(screen => {
+        screen.classList.remove("active");
+      });
+      document.getElementById("screen" + number).classList.add("active");
+    }
+
+    function createHearts() {
+      const heartsContainer = document.getElementById("hearts");
+
+      for (let i = 0; i < 28; i++) {
+        const heart = document.createElement("div");
+        heart.className = "heart";
+        heart.innerHTML = "❤";
+        heart.style.left = Math.random() * 100 + "vw";
+        heart.style.animationDuration = (5 + Math.random() * 7) + "s";
+        heart.style.animationDelay = Math.random() * 6 + "s";
+        heart.style.fontSize = (14 + Math.random() * 24) + "px";
+        heartsContainer.appendChild(heart);
+      }
+    }
+
+    function toggleMusic() {
+      const music = document.getElementById("bgMusic");
+      if (music.paused) {
+        music.play().catch(() => {});
+      } else {
+        music.pause();
+      }
+    }
+
+    const quizData = [
+      {
+        question: "Who made this website for Johnsy Mary?",
+        options: ["Asha Eframe", "Google", "A friend", "Nobody"],
+        answer: "Asha Eframe"
+      },
+      {
+        question: "Whose birthday is being celebrated here?",
+        options: ["Johnsy Mary", "Asha Eframe", "Someone else", "Nobody"],
+        answer: "Johnsy Mary"
+      },
+      {
+        question: "What does Asha Eframe want most today?",
+        options: ["To sleep", "To see Johnsy smile", "To study", "To travel"],
+        answer: "To see Johnsy smile"
+      },
+      {
+        question: "What is this website made with?",
+        options: ["Love", "Homework", "Random code", "Luck"],
+        answer: "Love"
+      },
+      {
+        question: "What kind of day does Johnsy Mary deserve?",
+        options: ["A boring day", "A sad day", "A beautiful birthday", "A normal day"],
+        answer: "A beautiful birthday"
+      },
+      {
+        question: "What is special about Johnsy Mary?",
+        options: ["Her smile", "Her kindness", "Her heart", "All of these"],
+        answer: "All of these"
+      },
+      {
+        question: "What should Johnsy Mary do today?",
+        options: ["Worry", "Smile", "Be sad", "Do work only"],
+        answer: "Smile"
+      },
+      {
+        question: "Who is very special to Asha Eframe?",
+        options: ["Johnsy Mary", "No one", "Everyone", "Unknown"],
+        answer: "Johnsy Mary"
+      },
+      {
+        question: "What message fits this birthday best?",
+        options: ["Stay serious", "Happy Birthday Johnsy Mary", "Goodbye", "Nothing"],
+        answer: "Happy Birthday Johnsy Mary"
+      },
+      {
+        question: "How is this website meant to feel?",
+        options: ["Romantic and sweet", "Scary", "Strict", "Formal"],
+        answer: "Romantic and sweet"
+      }
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+
+    function startQuiz() {
+      currentQuestion = 0;
+      score = 0;
+      nextScreen(5);
+      loadQuestion();
+    }
+
+    function loadQuestion() {
+      const current = quizData[currentQuestion];
+      document.getElementById("questionCount").textContent =
+        `Question ${currentQuestion + 1} of ${quizData.length}`;
+      document.getElementById("questionText").textContent = current.question;
+
+      const optionsContainer = document.getElementById("optionsContainer");
+      optionsContainer.innerHTML = "";
+
+      current.options.forEach(option => {
+        const button = document.createElement("div");
+        button.className = "option";
+        button.textContent = option;
+        button.onclick = () => selectAnswer(option);
+        optionsContainer.appendChild(button);
+      });
+    }
+
+    function selectAnswer(selectedOption) {
+      if (selectedOption === quizData[currentQuestion].answer) {
+        score += 5;
+      }
+
+      currentQuestion++;
+
+      if (currentQuestion < quizData.length) {
+        loadQuestion();
+      } else {
+        showResult();
+      }
+    }
+
+    function showResult() {
+      nextScreen(6);
+      document.getElementById("finalScore").textContent = `${score} / 50`;
+
+      const resultMessage = document.getElementById("resultMessage");
+
+      if (score >= 45) {
+        resultMessage.textContent =
+          "Perfect score, Johnsy Mary. This birthday queen knows everything. ❤️";
+      } else if (score >= 25) {
+        resultMessage.textContent =
+          "Amazing job, Johnsy Mary. You made this birthday quiz even sweeter. 💕";
+      } else {
+        resultMessage.textContent =
+          "No matter the score, you are still the most special girl here. 💖";
+      }
+    }
+
+    function flipCard(card) {
+  card.classList.toggle("flipped");
+  checkAllCardsFlipped();
+}
+
+function checkAllCardsFlipped() {
+  const cards = document.querySelectorAll(".flip-card");
+  const allFlipped = [...cards].every(card => card.classList.contains("flipped"));
+  const secretLetter = document.getElementById("secretLetter");
+
+  if (allFlipped) {
+    secretLetter.classList.remove("hidden");
+  } else {
+    secretLetter.classList.add("hidden");
+  }
+}
+function enterWebsite() {
+  const intro = document.getElementById("introScreen");
+  intro.classList.add("hide-intro");
+
+  setTimeout(() => {
+    intro.style.display = "none";
+  }, 800);
+}
+  </script>
+</body>
+</html>
