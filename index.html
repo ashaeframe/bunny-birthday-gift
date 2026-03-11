@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Happy Birthday Johnsy Mary</title>
+  <title>Happy Birthday Bunny 🎉</title>
   <style>
     * {
       margin: 0;
@@ -466,14 +467,112 @@
     transform: translateY(0) scale(1);
   }
 }
+
+.icon-row{
+  font-size:40px;
+  margin-top:10px;
+  animation: bounceIcons 2s infinite alternate;
+}
+
+@keyframes bounceIcons{
+  from{ transform: translateY(0); }
+  to{ transform: translateY(-10px); }
+}
+
+.letter-container{
+  perspective: 1000px;
+  margin: 20px auto;
+  display: flex;
+  justify-content: center;
+}
+
+.letter-card{
+  width: 100%;
+  max-width: 650px;
+  height: 420px;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 1s;
+  cursor: pointer;
+}
+
+.letter-card.flip{
+  transform: rotateY(180deg);
+}
+
+.letter-front,
+.letter-back{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  padding: 24px;
+  border-radius: 18px;
+  backface-visibility: hidden;
+  background: rgba(255,255,255,0.16);
+  border: 1px solid rgba(255,255,255,0.18);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  overflow: auto;
+}
+
+.letter-front{
+  z-index: 2;
+}
+
+.letter-back{
+  transform: rotateY(180deg);
+  line-height: 1.8;
+}
+
+.cake{
+  font-size:60px;
+  margin-top:20px;
+  animation: cakeBounce 1.5s infinite alternate;
+}
+
+@keyframes cakeBounce{
+  from{ transform:translateY(0);}
+  to{ transform:translateY(-15px);}
+}
+
+.love-rain-message {
+  position: fixed;
+  top: -60px;
+  font-size: 18px;
+  font-weight: 700;
+  color: white;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  pointer-events: none;
+  z-index: 9998;
+  animation: fallLoveMessage linear forwards;
+}
+
+@keyframes fallLoveMessage {
+  0% {
+    transform: translateY(0) rotate(-6deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(110vh) rotate(6deg);
+    opacity: 0;
+  }
+}
   </style>
 </head>
 <body>
   <div id="introScreen" class="intro-screen">
   <div class="intro-content">
     <h1 class="intro-title">A Special Surprise</h1>
-    <p class="intro-text">For <span>Johnsy Mary</span></p>
-    <p class="intro-text">From <span>Asha Eframe</span> ❤️</p>
+    <div class="icon-row">🐰 💖 🦊</div>
+    <p class="intro-text">For <span id="typingName"></span></p>
+    <p class="intro-text">From <span>Foxy</span> ❤️</p>
     <button class="enter-btn" onclick="enterWebsite()">Tap to Enter</button>
   </div>
 </div>
@@ -483,15 +582,15 @@
     <div class="card">
 
       <section class="screen active" id="screen1">
-        <h1>Happy Birthday Johnsy Mary ❤️</h1>
+        <h1>Happy Birthday Bunny 🎉</h1>
         <p>
           This little surprise is made with love by
-          <span class="highlight">Asha Eframe</span>
-          for the most special girl, <span class="highlight">Johnsy Mary</span>.
+          <span class="highlight">Foxy</span>
+          for the most special girl, <span class="highlight">Bunny</span>.
         </p>
 
         <div class="hero-photo">
-          <img src="photo1.jpeg" alt="Johnsy Mary">
+          <img src="photo1.jpeg" alt="Bunny">
         </div>
 
         <p>
@@ -500,14 +599,21 @@
 
         <button class="btn" onclick="nextScreen(2)">Open Your Surprise</button>
         <button class="btn secondary" onclick="toggleMusic()">Play / Pause Music</button>
-        <p class="small-note">Replace the photo and song file with your real ones.</p>
+        <div style="margin-top:20px;">
+<input id="secretInput" placeholder="Enter secret password" style="padding:10px;border-radius:10px;border:none;">
+<button class="btn" onclick="unlockSecret()">Unlock Secret</button>
+</div>
+
+<div id="secretMessage" style="display:none;margin-top:15px;font-size:18px;">
+💖 Foxy loves Bunny forever 💖
+</div>
       </section>
 
       <section class="screen" id="screen2">
         <h2>Why You Are So Special ✨</h2>
         <div class="message-box">
           <p>
-            Johnsy Mary, you are one of the sweetest and most beautiful parts of my life.
+            Bunny, you are one of the sweetest and most beautiful parts of my life.
             Your smile brings happiness, your presence brings peace, and your heart makes everything feel special.
           </p>
           <p>
@@ -530,7 +636,7 @@
         <img src="photo2.jpeg">
       </div>
       <div class="flip-back">
-        <p>Johnsy Mary, your smile makes my world brighter ❤️</p>
+        <p>Bunny, your smile makes my world brighter ❤️</p>
       </div>
     </div>
   </div>
@@ -563,7 +669,7 @@
         <img src="photo5.jpeg">
       </div>
       <div class="flip-back">
-        <p>Happy Birthday Johnsy Mary ❤️ – From Asha Eframe</p>
+        <p>Happy Birthday Bunny ❤️ – From Foxy</p>
       </div>
     </div>
   </div>
@@ -573,9 +679,9 @@
         <button class="btn" onclick="nextScreen(4)">Read My Letter</button>
       </section>
       <div id="secretLetter" class="secret-letter hidden">
-  <h3>Secret Letter for Johnsy Mary 💌</h3>
+  <h3>Secret Letter for Bunny 💌</h3>
   <p>
-    My dear Johnsy Mary,
+    My dear Bunny,
   </p>
   <p>
     If you are reading this, it means you found all the hidden memories.
@@ -586,43 +692,53 @@
     was made only to make you smile on your special day.
   </p>
   <p>
-    Happy Birthday, Johnsy Mary ❤️<br>
+    Happy Birthday, Bunny ❤️<br>
     Forever wishing you happiness,<br>
-    <strong>Asha Eframe</strong>
+    <strong>Foxy</strong>
   </p>
 </div>
 
       <section class="screen" id="screen4">
-        <h2>A Letter for Johnsy Mary 💌</h2>
-        <div class="letter">
-          <p>My dear Johnsy Mary,</p>
+  <h2>A Letter for Bunny 💌</h2>
 
-          <p>
-            Happy Birthday to the most wonderful girl. On this special day, I want you to know how much you mean to me.
-            You bring warmth, joy, and sweetness into my life in a way that words can never fully explain.
-          </p>
+  <div class="letter-container">
+    <div class="letter-card" onclick="flipLetter(this)">
 
-          <p>
-            You are beautiful not only in your smile, but also in your heart, your kindness, and the way you make life feel brighter.
-            I am truly grateful for every memory, every conversation, and every little moment connected with you.
-          </p>
+      <div class="letter-front">
+        <h3>💌 Tap to Open My Letter</h3>
+        <p>Foxy wrote a special message for Bunny.</p>
+      </div>
 
-          <p>
-            Today, I wish you endless happiness, success, peace, and love.
-            May your life always be filled with beautiful moments and genuine smiles.
-          </p>
+      <div class="letter-back">
+        <p>My dear Bunny,</p>
 
-          <p>
-            Once again, Happy Birthday, Johnsy Mary. You are very special to me.
-          </p>
+        <p>
+          Happy Birthday to the most wonderful girl. On this special day,
+          I want you to know how much you mean to me.
+        </p>
 
-          <p>
-            With love,<br>
-            <strong>Asha Eframe ❤️</strong>
-          </p>
-        </div>
-        <button class="btn" onclick="startQuiz()">Start Birthday Quiz</button>
-      </section>
+        <p>
+          You bring warmth, joy, and happiness into my life in a way that
+          words can never fully explain.
+        </p>
+
+        <p>
+          May your life always be filled with beautiful moments,
+          genuine smiles, and endless happiness.
+        </p>
+
+        <p>
+          With love,<br>
+          <strong>Foxy ❤️</strong>
+        </p>
+      </div>
+
+    </div>
+  </div>
+
+  <button class="btn" onclick="startQuiz()">Start Birthday Quiz</button>
+</section>
+    
 
       <section class="screen" id="screen5">
         <h2>Birthday Quiz 🎀</h2>
@@ -636,7 +752,7 @@
       <section class="screen" id="screen6">
         <h2>Your Result 💖</h2>
         <div class="result-box">
-          <p>You completed the birthday quiz, Johnsy Mary.</p>
+          <p>You completed the birthday quiz, Bunny.</p>
           <div class="score" id="finalScore">0 / 50</div>
           <p id="resultMessage"></p>
         </div>
@@ -645,16 +761,17 @@
 
       <section class="screen" id="screen7">
         <h2>Final Surprise ❤️</h2>
+        <div class="cake">🎂</div>
         <div class="message-box">
           <p>
-            Johnsy Mary, no score, no words, and no gift can fully express how special you are.
+            Bunny, no score, no words, and no gift can fully express how special you are.
           </p>
           <p>
             I just want to see you smiling today and always.
           </p>
           <p>
-            <span class="highlight">Happy Birthday, Johnsy Mary</span><br>
-            With love from <span class="highlight">Asha Eframe</span>.
+            <span class="highlight">Happy Birthday, Bunny</span><br>
+            With love from <span class="highlight">Foxy</span>.
           </p>
         </div>
 
@@ -675,11 +792,19 @@
 
   <script>
     function nextScreen(number) {
-      document.querySelectorAll(".screen").forEach(screen => {
-        screen.classList.remove("active");
-      });
-      document.getElementById("screen" + number).classList.add("active");
-    }
+  document.querySelectorAll(".screen").forEach(screen => {
+    screen.classList.remove("active");
+  });
+
+  document.getElementById("screen" + number).classList.add("active");
+
+  if (number === 7) {
+    startLoveRain();
+    launchFireworks();
+  } else {
+    stopLoveRain();
+  }
+}
 
     function createHearts() {
       const heartsContainer = document.getElementById("hearts");
@@ -707,19 +832,19 @@
 
     const quizData = [
       {
-        question: "Who made this website for Johnsy Mary?",
-        options: ["Asha Eframe", "Google", "A friend", "Nobody"],
-        answer: "Asha Eframe"
+        question: "Who made this website for Bunny?",
+        options: ["Foxy", "Google", "A friend", "Nobody"],
+        answer: "Foxy"
       },
       {
         question: "Whose birthday is being celebrated here?",
-        options: ["Johnsy Mary", "Asha Eframe", "Someone else", "Nobody"],
-        answer: "Johnsy Mary"
+        options: ["Bunny", "Foxy", "Someone else", "Nobody"],
+        answer: "Bunny"
       },
       {
-        question: "What does Asha Eframe want most today?",
-        options: ["To sleep", "To see Johnsy smile", "To study", "To travel"],
-        answer: "To see Johnsy smile"
+        question: "What does Foxy want most today?",
+        options: ["To sleep", "To see Bunny smile", "To study", "To travel"],
+        answer: "To see Bunny smile"
       },
       {
         question: "What is this website made with?",
@@ -727,29 +852,29 @@
         answer: "Love"
       },
       {
-        question: "What kind of day does Johnsy Mary deserve?",
+        question: "What kind of day does Bunny deserve?",
         options: ["A boring day", "A sad day", "A beautiful birthday", "A normal day"],
         answer: "A beautiful birthday"
       },
       {
-        question: "What is special about Johnsy Mary?",
+        question: "What is special about Bunny?",
         options: ["Her smile", "Her kindness", "Her heart", "All of these"],
         answer: "All of these"
       },
       {
-        question: "What should Johnsy Mary do today?",
+        question: "What should Bunny do today?",
         options: ["Worry", "Smile", "Be sad", "Do work only"],
         answer: "Smile"
       },
       {
-        question: "Who is very special to Asha Eframe?",
-        options: ["Johnsy Mary", "No one", "Everyone", "Unknown"],
-        answer: "Johnsy Mary"
+        question: "Who is very special to Foxy?",
+        options: ["Bunny", "No one", "Everyone", "Unknown"],
+        answer: "Bunny"
       },
       {
         question: "What message fits this birthday best?",
-        options: ["Stay serious", "Happy Birthday Johnsy Mary", "Goodbye", "Nothing"],
-        answer: "Happy Birthday Johnsy Mary"
+        options: ["Stay serious", "Happy Birthday Bunny", "Goodbye", "Nothing"],
+        answer: "Happy Birthday Bunny"
       },
       {
         question: "How is this website meant to feel?",
@@ -808,10 +933,10 @@
 
       if (score >= 45) {
         resultMessage.textContent =
-          "Perfect score, Johnsy Mary. This birthday queen knows everything. ❤️";
+          "Perfect score, Bunny. This birthday queen knows everything. ❤️";
       } else if (score >= 25) {
         resultMessage.textContent =
-          "Amazing job, Johnsy Mary. You made this birthday quiz even sweeter. 💕";
+          "Amazing job, Bunny. You made this birthday quiz even sweeter. 💕";
       } else {
         resultMessage.textContent =
           "No matter the score, you are still the most special girl here. 💖";
@@ -842,6 +967,82 @@ function enterWebsite() {
     intro.style.display = "none";
   }, 800);
 }
+const text = "Bunny";
+let index = 0;
+
+function typeWriter() {
+  if (index < text.length) {
+    document.getElementById("typingName").innerHTML += text.charAt(index);
+    index++;
+    setTimeout(typeWriter, 120);
+  }
+}
+
+typeWriter();
+
+function flipLetter(card){
+  card.classList.toggle("flip");
+}
+
+function unlockSecret(){
+  const password = document.getElementById("secretInput").value;
+
+  if(password === "bunny"){
+    document.getElementById("secretMessage").style.display="block";
+  } else {
+    alert("Wrong password ❤️");
+  }
+}
+const loveMessages = [
+  "Bunny 💖",
+  "Foxy loves Bunny ❤️",
+  "Happy Birthday Bunny 🎂",
+  "You are my favorite person 💕",
+  "Forever Bunny & Foxy 🐰🦊",
+  "You make my world brighter ✨"
+];
+
+let loveRainInterval;
+
+function createLoveRainMessage() {
+  const msg = document.createElement("div");
+  msg.className = "love-rain-message";
+  msg.textContent = loveMessages[Math.floor(Math.random() * loveMessages.length)];
+  msg.style.left = Math.random() * 85 + "vw";
+  msg.style.animationDuration = (4 + Math.random() * 3) + "s";
+  document.body.appendChild(msg);
+
+  setTimeout(() => {
+    msg.remove();
+  }, 7000);
+}
+
+function startLoveRain() {
+  stopLoveRain();
+  loveRainInterval = setInterval(createLoveRainMessage, 900);
+}
+
+function stopLoveRain() {
+  clearInterval(loveRainInterval);
+}
+function launchFireworks() {
+  const duration = 4000;
+  const end = Date.now() + duration;
+
+  const interval = setInterval(() => {
+    if (Date.now() > end) {
+      clearInterval(interval);
+      return;
+    }
+
+    confetti({
+      particleCount: 70,
+      spread: 100,
+      origin: { x: Math.random(), y: Math.random() * 0.5 },
+      scalar: 1.1
+    });
+  }, 250);
+}
   </script>
 </body>
-</html>
+</html>    
